@@ -83,9 +83,9 @@ k = (str.T1+str.T2-str.Te)/str.Te
 KrStr = 1/KpY + (k^2+1)/2*k 
 TiStr = (((k^2+1)*(k+1))/(k^2+k+1))*str.Te
 
-GpPIDStr = tf([KrStr KrStr/TiStr],[1 0])
+GpPIStr = tf([KrStr KrStr/TiStr],[1 0])
 
-sys = step(GpPIDStr,tY);
+sys = step(GpPIStr,tY);
 plot(tY,sys,"r-","DisplayName","Strejc");
 
 %% Kompensationsregler
@@ -118,26 +118,59 @@ GpYSwaGpPIDTsumRes = step(GpYSwaGpPIDTsum, tY, opt);
 
 %Latzel
 
-GpYSwaGpPIDTLa = feedback(GpYSwa*GpPIDLa,1);
+GpYSwaGpPIDLa = feedback(GpYSwa*GpPIDLa,1);
 
-GpYSwaGpPIDTLaRes = step(GpYSwaGpPIDTLa, tY, opt);
+GpYSwaGpPIDLaRes = step(GpYSwaGpPIDLa, tY, opt);
 
 %Strejc
 
-GpYSwaGpPIDStr = feedback(GpYSwa*GpPIDStr,1);
+GpYSwaGpPIStr = feedback(GpYSwa*GpPIStr,1);
 
-GpYSwaGpPIDStrRes = step(GpYSwaGpPIDStr, tY, opt);
+GpYSwaGpPIStrRes = step(GpYSwaGpPIStr, tY, opt);
 
+%Kompensationsregler
 
+GpYSwaGpPIKom = feedback(GpYSwa*GpPIKom,1);
+
+GpYSwaGpPIKomRes = step(GpYSwaGpPIKom, tY, opt);
 
 
 % Plot the step response
 figure(13), clf, hold on, grid on, legend show
 plot(tY, GpYSwaGpPIDTsumRes,"b-","DisplayName","Tsumme");
+plot(tY, GpYSwaGpPIKomRes,"c-","DisplayName","Kompensationsregler");
+plot(tY, GpYSwaGpPIDLaRes,"g-","DisplayName","Latzel");
+plot(tY, GpYSwaGpPIStrRes,"r-","DisplayName","Strejc");
 title('Regelkreissprungantwort');
 xlabel('Time');
 ylabel('Output');
 grid on;
+
+%% Umlaufdauer T bestimmen
+
+% Strejc
+[y,x] = max(GpYSwaGpPIStrRes)
+tUmStr1 = x * TintervalY
+[y,x] = max(GpYSwaGpPIStrRes(10000:end))
+tUmStr2 = (x + 10000) * TintervalY
+tUmStr = tUmStr2-tUmStr1
+tUmStr
+
+% Kompensationsregler
+[y,x] = max(GpYSwaGpPIKomRes)
+tUmKom1 = x * TintervalY
+[y,x] = max(GpYSwaGpPIKomRes(50000:end))
+tUmKom2 = (x + 50000) * TintervalY
+tUmKom = tUmKom2-tUmKom1
+tUmKom
+
+%% Relative Überschwingweite
+
+% Strejc
+maxY = max(GpYSwaGpPIStrRes)
+ySchwingStr = maxY / 6
+ySchwingStr
+
 
 
 

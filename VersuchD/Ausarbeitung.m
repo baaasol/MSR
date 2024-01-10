@@ -166,6 +166,20 @@ tUmKom
 
 %% Relative Überschwingweite
 
+% Strejc
+maxY = max(GpYSwaGpPIStrRes)
+ySchwingStr = (maxY / 6 - 1) * 100
+ySchwingStr
+
+%Kompensationsregler
+maxY = max(GpYSwaGpPIKomRes)
+ySchwingKom = (maxY / 6 - 1) * 100
+ySchwingKom
+
+% T-Summen Verfahren
+maxY = max(GpYSwaGpPIDTsumRes)
+ySchwingTsum = (maxY / 6 - 1) * 100
+ySchwingTsum
 
 
 
