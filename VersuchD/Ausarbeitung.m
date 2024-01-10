@@ -146,6 +146,27 @@ xlabel('Time');
 ylabel('Output');
 grid on;
 
+%% Umlaufdauer T bestimmen
+
+% Strejc
+[y,x] = max(GpYSwaGpPIStrRes)
+tUmStr1 = x * TintervalY
+[y,x] = max(GpYSwaGpPIStrRes(10000:end))
+tUmStr2 = (x + 10000) * TintervalY
+tUmStr = tUmStr2-tUmStr1
+tUmStr
+
+% Kompensationsregler
+[y,x] = max(GpYSwaGpPIKomRes)
+tUmKom1 = x * TintervalY
+[y,x] = max(GpYSwaGpPIKomRes(50000:end))
+tUmKom2 = (x + 50000) * TintervalY
+tUmKom = tUmKom2-tUmKom1
+tUmKom
+
+%% Relative Überschwingweite
+
+
 
 
 
