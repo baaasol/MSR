@@ -295,9 +295,9 @@ disp("Kompensationsregler")
 thresholdHigh = 0.05 + 5;
 
 % Find the first value above the threshold starting from the end
-aboveThresholdIndices = find(PIDSwaKomZ > thresholdHigh, 1, 'last')
-firstAboveThresholdValue = PIDSwaKomZ(aboveThresholdIndices)
-timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+% aboveThresholdIndices = find(PIDSwaKomZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaKomZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
 
 thresholdLow = 5 - 0.05;
 
@@ -312,9 +312,9 @@ timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
 disp("Strejc")
 
 % Find the first value above the threshold starting from the end
-aboveThresholdIndices = find(PIDSwaStrZ > thresholdHigh, 1, 'last')
-firstAboveThresholdValue = PIDSwaStrZ(aboveThresholdIndices)
-timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+% aboveThresholdIndices = find(PIDSwaStrZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaStrZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
 
 % Find the first value above the threshold starting from the end
 belowThresholdIndices = find(PIDSwaStrZ < thresholdLow, 1, 'last')
@@ -326,9 +326,9 @@ timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
 disp("T-Summen Verfahren")
 
 % Find the first value above the threshold starting from the end
-aboveThresholdIndices = find(PIDSwaTsumZ > thresholdHigh, 1, 'last')
-firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
-timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+% aboveThresholdIndices = find(PIDSwaTsumZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
 
 % Find the first value above the threshold starting from the end
 belowThresholdIndices = find(PIDSwaTsumZ < thresholdLow, 1, 'last')
@@ -340,14 +340,40 @@ timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
 disp("Latzel")
 
 % Find the first value above the threshold starting from the end
-aboveThresholdIndices = find(PIDSwaLaZ > thresholdHigh, 1, 'last')
-firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
-timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+% aboveThresholdIndices = find(PIDSwaLaZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
 
 % Find the first value above the threshold starting from the end
 belowThresholdIndices = find(PIDSwaLaZ < thresholdLow, 1, 'last')
 firstbelowThresholdValue = PIDSwaLaZ(belowThresholdIndices)
-timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
+timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
+
+%% Maximale Überschwingweite
+
+disp("Strejc")
+
+% Strejc
+minY = min(PIDSwaStrZ(400000:end))
+yUnterSchwingStr = (1- minY / 5) * 100
+
+disp("Kompensationsregler")
+
+%Kompensationsregler
+minY = min(PIDSwaKomZ(400000:end))
+yUnterSchwingKom = (1- minY / 5) * 100
+
+disp("T-Summen Verfahren")
+
+% T-Summen Verfahren
+minY = min(PIDSwaTsumZ(400000:end))
+yUnterSchwingTsum = (1- minY / 5) * 100
+
+disp("Latzel")
+
+% Latzel
+minY = min(PIDSwaLaZ(400000:end))
+yUnterSchwingLaZ = (1- minY / 5) * 100
 
 
 
