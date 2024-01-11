@@ -207,6 +207,8 @@ xlabel('Time');
 ylabel('Output');
 
 %% Umlaufdauer T bestimmen
+disp("Umlaufdauer")
+disp("Strejc")
 
 % Strejc
 [y,x] = max(PIDSwaStrY(400000:end))
@@ -215,6 +217,7 @@ tUmStr1 = x * 0.001
 tUmStr2 = (x + 15000) * 0.001
 tUmStr = tUmStr2-tUmStr1
 
+disp("Kompensationsregler")
 
 % Kompensationsregler
 [y,x] = max(PIDSwaKomY(400000:end))
@@ -224,14 +227,20 @@ tUmKom2 = (x + 100000) * 0.001
 tUmKom = tUmKom2-tUmKom1
 
 %% Relative Überschwingweite
+disp("Überschwingweite")
+disp("Strejc")
 
 % Strejc
 maxY = max(PIDSwaStrY(400000:end))
 ySchwingStr = (maxY / 6 - 1) * 100
 
+disp("Kompensationsregler")
+
 %Kompensationsregler
 maxY = max(PIDSwaKomY(400000:end))
 ySchwingKom = (maxY / 6 - 1) * 100
+
+disp("T-Summen Verfahren")
 
 % T-Summen Verfahren
 maxY = max(PIDSwaTsumY(400000:end))
