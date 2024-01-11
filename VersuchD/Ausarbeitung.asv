@@ -182,8 +182,8 @@ plot(tSimulinkRt, PIDSwaTsumY,"b-","DisplayName","Tsumme Y");
 plot(tSimulinkRt, PIDSwaKomY,"c-","DisplayName","Kompensationsregler");
 plot(tSimulinkRt, PIDSwaLaY,"g-","DisplayName","Latzel");
 plot(tSimulinkRt, PIDSwaStrY,"r-","DisplayName","Strejc");
-plot(tSimulinkRt, stellgr,"g-","DisplayName","Latzel");
-plot(tSimulinkRt, stoergr,"r-","DisplayName","Strejc");
+plot(tSimulinkRt, stellgr,"g-","DisplayName","stellgroesse");
+plot(tSimulinkRt, stoergr,"r-","DisplayName","stoergroess");
 title('Strecken Simulation Stellgrößensprung');
 xlabel('Time');
 ylabel('Output');
@@ -193,8 +193,8 @@ plot(tSimulinkRt, PIDSwaTsumZ,"b-","DisplayName","Tsumme Y");
 plot(tSimulinkRt, PIDSwaKomZ,"c-","DisplayName","Kompensationsregler");
 plot(tSimulinkRt, PIDSwaLaZ,"g-","DisplayName","Latzel");
 plot(tSimulinkRt, PIDSwaStrZ,"r-","DisplayName","Strejc");
-plot(tSimulinkRt, stellgr,"g-","DisplayName","Latzel");
-plot(tSimulinkRt, stoergr,"r-","DisplayName","Strejc");
+plot(tSimulinkRt, stellgr,"g-","DisplayName","stellgrosse");
+plot(tSimulinkRt, stoergr,"r-","DisplayName","stoergroesse");
 title('Strecken Simulation Störgrößensprung');
 xlabel('Time');
 ylabel('Output');
@@ -260,14 +260,22 @@ firstbelowThresholdValue = PIDSwaStrZ(belowThresholdIndices)
 % Tsumme
 
 % Find the first value above the threshold starting from the end
-aboveThresholdIndices = find(PIDSwaStrZ > thresholdHigh, 1, 'last')
-firstAboveThresholdValue = PIDSwaStrZ(aboveThresholdIndices)
+aboveThresholdIndices = find(PIDSwaTsumZ > thresholdHigh, 1, 'last')
+firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
 
 % Find the first value above the threshold starting from the end
-belowThresholdIndices = find(PIDSwaStrZ < thresholdLow, 1, 'last')
-firstbelowThresholdValue = PIDSwaStrZ(belowThresholdIndices)
+belowThresholdIndices = find(PIDSwaTsumZ < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaTsumZ(belowThresholdIndices)
 
 %Latzel
+
+% Find the first value above the threshold starting from the end
+aboveThresholdIndices = find(PIDSwaLaZ > thresholdHigh, 1, 'last')
+firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaLaZ < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaLaZ(belowThresholdIndices)
 
 
 
