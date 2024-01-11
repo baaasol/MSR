@@ -66,12 +66,18 @@ TiT = 2.47;
 TdT = 0.66;
 KpKr = 2.543;
 
-TiL = 2.47 * tYSwa
-TdL = 0.66 * tYSwa
+TiLa = 2.47 * tYSwa
+TdLa = 0.66 * tYSwa
 
-KrL = KpKr/KpY
+KrLa = KpKr/KpY
 
-GpPIDLa = KrL + tf(KrL,[TiL 0]) + tf([KrL*TdL 0],[TdL/5 1]);
+
+KrLa = 1/KpY
+KiLa = KrLa/TiLa
+KdLa = TdLa*KrLa
+
+
+GpPIDLa = KrLa + tf(KrLa,[TiLa 0]) + tf([KrLa*TdLa 0],[TdLa/5 1]);
 GpPIDLa
 sys = step(GpPIDLa,tY);
 plot(tY,sys,"g-","DisplayName","Latzel");
@@ -82,6 +88,9 @@ k = (str.T1+str.T2-str.Te)/str.Te
 
 KrStr = 1/KpY + (k^2+1)/2*k 
 TiStr = (((k^2+1)*(k+1))/(k^2+k+1))*str.Te
+
+KiStr = KrStr/TiStr
+KdStr = 0
 
 GpPIStr = tf([KrStr KrStr/TiStr],[1 0])
 
@@ -97,94 +106,176 @@ GpPIKom = tf([1.647 0.237 7.28e-3],[0.689 0.0307 0])
 
 sys = step(GpPIKom,tY);
 KrKom = sys(1)
-TiKom = sys(500)/sys(1) 
+KiKom = sys(500)-sys(1) 
+
+TiKom = KrKom/KiKom
+KdKom = 0
+
 
 plot(tY,step(GpPIKom,tY),"k-","DisplayName","Kompensationsregler")
 
 
 
-%% 8.
+%% Das ist leider unnötig 
+% 
+% 
+% % Tsum
+% 
+% opt = stepDataOptions;
+% opt.InputOffset = 4;
+% opt.StepAmplitude = 2;
+% 
+% GpYSwaGpPIDTsum = feedback(GpYSwa*GpPIDTsum,1);
+% 
+% GpYSwaGpPIDTsumRes = step(GpYSwaGpPIDTsum, tY, opt);
+% 
+% %Latzel
+% 
+% GpYSwaGpPIDLa = feedback(GpYSwa*GpPIDLa,1);
+% 
+% GpYSwaGpPIDLaRes = step(GpYSwaGpPIDLa, tY, opt);
+% 
+% %Strejc
+% 
+% GpYSwaGpPIStr = feedback(GpYSwa*GpPIStr,1);
+% 
+% GpYSwaGpPIStrRes = step(GpYSwaGpPIStr, tY, opt);
+% 
+% %Kompensationsregler
+% 
+% GpYSwaGpPIKom = feedback(GpYSwa*GpPIKom,1);
+% 
+% GpYSwaGpPIKomRes = step(GpYSwaGpPIKom, tY, opt);
+% 
+% 
+% % Plot the step response
+% figure(13), clf, hold on, grid on, legend show
+% plot(tY, GpYSwaGpPIDTsumRes,"b-","DisplayName","Tsumme");
+% plot(tY, GpYSwaGpPIKomRes,"c-","DisplayName","Kompensationsregler");
+% plot(tY, GpYSwaGpPIDLaRes,"g-","DisplayName","Latzel");
+% plot(tY, GpYSwaGpPIStrRes,"r-","DisplayName","Strejc");
+% title('Regelkreissprungantwort');
+% xlabel('Time');
+% ylabel('Output');
+% 
+
+out = sim("Stoergroessensprung.slx");
+
+PIDSwaTsumY  = out.PIDSwaTsumYRes.';
+PIDSwaTsumZ  = out.PIDSwaTsumZRes1.';
+PIDSwaStrY   = out.PIDSwaStrYRes.';
+PIDSwaStrZ   = out.PIDSwaStrZRes1.';
+PIDSwaLaY    = out.PIDSwaLaYRes1.';
+PIDSwaLaZ    = out.PIDSwaLaZRes.';
+PIDSwaKomY   = out.PIDSwaKomYRes1.';
+PIDSwaKomZ   = out.PIDSwaKomZRes.';
+
+stellgr      = out.Stellgr.';
+stoergr      = out.Stoergr.';
 
 
-% Tsum
+tSimulink=(1:1:length(out.PIDSwaKomYRes1));
+tSimulinkRt = tSimulink * 0.001;
 
-opt = stepDataOptions;
-opt.InputOffset = 4;
-opt.StepAmplitude = 2;
-
-GpYSwaGpPIDTsum = feedback(GpYSwa*GpPIDTsum,1);
-
-GpYSwaGpPIDTsumRes = step(GpYSwaGpPIDTsum, tY, opt);
-
-%Latzel
-
-GpYSwaGpPIDLa = feedback(GpYSwa*GpPIDLa,1);
-
-GpYSwaGpPIDLaRes = step(GpYSwaGpPIDLa, tY, opt);
-
-%Strejc
-
-GpYSwaGpPIStr = feedback(GpYSwa*GpPIStr,1);
-
-GpYSwaGpPIStrRes = step(GpYSwaGpPIStr, tY, opt);
-
-%Kompensationsregler
-
-GpYSwaGpPIKom = feedback(GpYSwa*GpPIKom,1);
-
-GpYSwaGpPIKomRes = step(GpYSwaGpPIKom, tY, opt);
-
-
-% Plot the step response
 figure(13), clf, hold on, grid on, legend show
-plot(tY, GpYSwaGpPIDTsumRes,"b-","DisplayName","Tsumme");
-plot(tY, GpYSwaGpPIKomRes,"c-","DisplayName","Kompensationsregler");
-plot(tY, GpYSwaGpPIDLaRes,"g-","DisplayName","Latzel");
-plot(tY, GpYSwaGpPIStrRes,"r-","DisplayName","Strejc");
-title('Regelkreissprungantwort');
+plot(tSimulinkRt, PIDSwaTsumY,"b-","DisplayName","Tsumme Y");
+plot(tSimulinkRt, PIDSwaKomY,"c-","DisplayName","Kompensationsregler");
+plot(tSimulinkRt, PIDSwaLaY,"g-","DisplayName","Latzel");
+plot(tSimulinkRt, PIDSwaStrY,"r-","DisplayName","Strejc");
+plot(tSimulinkRt, stellgr,"g-","DisplayName","Latzel");
+plot(tSimulinkRt, stoergr,"r-","DisplayName","Strejc");
+title('Strecken Simulation Stellgrößensprung');
 xlabel('Time');
 ylabel('Output');
-grid on;
+
+figure(14), clf, hold on, grid on, legend show
+plot(tSimulinkRt, PIDSwaTsumZ,"b-","DisplayName","Tsumme Y");
+plot(tSimulinkRt, PIDSwaKomZ,"c-","DisplayName","Kompensationsregler");
+plot(tSimulinkRt, PIDSwaLaZ,"g-","DisplayName","Latzel");
+plot(tSimulinkRt, PIDSwaStrZ,"r-","DisplayName","Strejc");
+plot(tSimulinkRt, stellgr,"g-","DisplayName","Latzel");
+plot(tSimulinkRt, stoergr,"r-","DisplayName","Strejc");
+title('Strecken Simulation Störgrößensprung');
+xlabel('Time');
+ylabel('Output');
 
 %% Umlaufdauer T bestimmen
 
 % Strejc
-[y,x] = max(GpYSwaGpPIStrRes)
-tUmStr1 = x * TintervalY
-[y,x] = max(GpYSwaGpPIStrRes(10000:end))
-tUmStr2 = (x + 10000) * TintervalY
+[y,x] = max(PIDSwaStrY(400000:end))
+tUmStr1 = x * 0.001
+[y,x] = max(PIDSwaStrY(415000:end))
+tUmStr2 = (x + 15000) * 0.001
 tUmStr = tUmStr2-tUmStr1
-tUmStr
+
 
 % Kompensationsregler
-[y,x] = max(GpYSwaGpPIKomRes)
-tUmKom1 = x * TintervalY
-[y,x] = max(GpYSwaGpPIKomRes(50000:end))
-tUmKom2 = (x + 50000) * TintervalY
+[y,x] = max(PIDSwaKomY(400000:end))
+tUmKom1 = x * 0.001
+[y,x] = max(PIDSwaKomY(500000:end))
+tUmKom2 = (x + 100000) * 0.001
 tUmKom = tUmKom2-tUmKom1
-tUmKom
 
 %% Relative Überschwingweite
 
 % Strejc
-maxY = max(GpYSwaGpPIStrRes)
+maxY = max(PIDSwaStrY(400000:end))
 ySchwingStr = (maxY / 6 - 1) * 100
-ySchwingStr
 
 %Kompensationsregler
-maxY = max(GpYSwaGpPIKomRes)
+maxY = max(PIDSwaKomY(400000:end))
 ySchwingKom = (maxY / 6 - 1) * 100
-ySchwingKom
 
 % T-Summen Verfahren
-maxY = max(GpYSwaGpPIDTsumRes)
+maxY = max(PIDSwaTsumY(400000:end))
 ySchwingTsum = (maxY / 6 - 1) * 100
-ySchwingTsum
 
 
+%% Einschwingen auf Beharrungszustand
 
+% Kom
+% Define the threshold (e.g., 0.05 of the last value)
+thresholdHigh = 0.05 + 5;
 
+% Find the first value above the threshold starting from the end
+aboveThresholdIndices = find(PIDSwaKomZ > thresholdHigh, 1, 'last')
+firstAboveThresholdValue = PIDSwaKomZ(aboveThresholdIndices)
 
+thresholdLow = 5 - 0.05;
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaKomZ < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaKomZ(belowThresholdIndices)
+
+% Strejc
+
+% Find the first value above the threshold starting from the end
+aboveThresholdIndices = find(PIDSwaStrZ > thresholdHigh, 1, 'last')
+firstAboveThresholdValue = PIDSwaStrZ(aboveThresholdIndices)
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaStrZ < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaStrZ(belowThresholdIndices)
+
+% Tsumme
+
+% Find the first value above the threshold starting from the end
+aboveThresholdIndices = find(PIDSwaTsumZ > thresholdHigh, 1, 'last')
+firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaTsumZ < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaTsumZ(belowThresholdIndices)
+
+%Latzel
+
+% Find the first value above the threshold starting from the end
+aboveThresholdIndices = find(PIDSwaLaZ > thresholdHigh, 1, 'last')
+firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaLaZ < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaLaZ(belowThresholdIndices)
 
 
 
