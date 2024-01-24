@@ -86,7 +86,7 @@ plot(tY,sys,"g-","DisplayName","Latzel");
 
 k = (str.T1+str.T2-str.Te)/str.Te
 
-KrStr = 1/KpY + (k^2+1)/2*k 
+KrStr = 1/KpY * (k^2+1)/2*k 
 TiStr = (((k^2+1)*(k+1))/(k^2+k+1))*str.Te
 
 KiStr = KrStr/TiStr
