@@ -385,5 +385,67 @@ minY = min(PIDSwaLaZ(400000:end))
 yUnterSchwingLaZ = (1- minY / 5) * 100
 
 
+%% Einschwingen auf Beharrungszustand
 
+% Kom
+disp("Stellgrößensprung")
+disp("Kompensationsregler")
+
+% Define the threshold (e.g., 0.05 of the last value)
+thresholdHigh = 0.05 * 6 + 6;
+
+% Find the first value above the threshold starting from the end
+% aboveThresholdIndices = find(PIDSwaKomZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaKomZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+
+thresholdLow = 6 - 0.05 * 6;
+
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaKomY < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaKomY(belowThresholdIndices)
+timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
+
+% Strejc
+
+disp("Strejc")
+
+% Find the first value above the threshold starting from the end
+% aboveThresholdIndices = find(PIDSwaStrZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaStrZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaStrY < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaStrY(belowThresholdIndices)
+timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
+
+% Tsumme
+
+disp("T-Summen Verfahren")
+
+% Find the first value above the threshold starting from the end
+% aboveThresholdIndices = find(PIDSwaTsumZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaTsumY < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaTsumY(belowThresholdIndices)
+timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
+
+%Latzel
+
+disp("Latzel")
+
+% Find the first value above the threshold starting from the end
+% aboveThresholdIndices = find(PIDSwaLaZ > thresholdHigh, 1, 'last')
+% firstAboveThresholdValue = PIDSwaTsumZ(aboveThresholdIndices)
+% timeAboveThresholdIndices = aboveThresholdIndices * 0.001 - 400
+
+% Find the first value above the threshold starting from the end
+belowThresholdIndices = find(PIDSwaLaY < thresholdLow, 1, 'last')
+firstbelowThresholdValue = PIDSwaLaY(belowThresholdIndices)
+timeBelowThresholdIndices = belowThresholdIndices * 0.001 - 400
 
